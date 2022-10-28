@@ -19,7 +19,7 @@ export const RolloutActionButton = (props: {action: RolloutAction; rollout: Roll
 
     const restartedAt = formatTimestamp(props.rollout.restartedAt || '');
     const isDeploying = props.rollout.status === RolloutStatus.Progressing || props.rollout.status === RolloutStatus.Paused
-
+    const forbiddenWriteOperation = true
     const actionMap = new Map<RolloutAction, ActionButtonProps & {body?: any}>([
         [
             RolloutAction.Restart,
@@ -28,6 +28,7 @@ export const RolloutActionButton = (props: {action: RolloutAction; rollout: Roll
                 icon: 'fa-sync',
                 action: api.rolloutServiceRestartRollout,
                 tooltip: restartedAt === 'Never' ? 'Never restarted' : `Last restarted ${restartedAt}`,
+                disabled: forbiddenWriteOperation,
                 shouldConfirm: true,
             },
         ],
@@ -37,7 +38,7 @@ export const RolloutActionButton = (props: {action: RolloutAction; rollout: Roll
                 label: 'RETRY',
                 icon: 'fa-redo-alt',
                 action: api.rolloutServiceRetryRollout,
-                disabled: props.rollout.status !== RolloutStatus.Degraded,
+                disabled: props.rollout.status !== RolloutStatus.Degraded || forbiddenWriteOperation,
                 shouldConfirm: true,
             },
         ],
@@ -47,7 +48,7 @@ export const RolloutActionButton = (props: {action: RolloutAction; rollout: Roll
                 label: 'ABORT',
                 icon: 'fa-exclamation-circle',
                 action: api.rolloutServiceAbortRollout,
-                disabled: !isDeploying,
+                disabled: !isDeploying || forbiddenWriteOperation,
                 shouldConfirm: true,
             },
         ],
@@ -58,7 +59,7 @@ export const RolloutActionButton = (props: {action: RolloutAction; rollout: Roll
                 icon: 'fa-chevron-circle-up',
                 action: api.rolloutServicePromoteRollout,
                 body: {full: false},
-                disabled: !isDeploying,
+                disabled: !isDeploying || forbiddenWriteOperation,
                 shouldConfirm: true,
             },
         ],
@@ -69,7 +70,7 @@ export const RolloutActionButton = (props: {action: RolloutAction; rollout: Roll
                 icon: 'fa-arrow-circle-up',
                 action: api.rolloutServicePromoteRollout,
                 body: {full: true},
-                disabled: !isDeploying,
+                disabled: !isDeploying || forbiddenWriteOperation,
                 shouldConfirm: true,
             },
         ],

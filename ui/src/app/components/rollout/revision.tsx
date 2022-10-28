@@ -53,6 +53,7 @@ export const RevisionWidget = (props: RevisionWidgetProps) => {
                             action={() => props.rollback(Number(revision.number))}
                             label='ROLLBACK'
                             icon='fa-undo-alt'
+                            disabled={true}
                             style={{fontSize: '13px'}}
                             indicateLoading
                             shouldConfirm
